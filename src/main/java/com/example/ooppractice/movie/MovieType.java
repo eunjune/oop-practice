@@ -1,4 +1,4 @@
-package com.example.ooppractice.movie.datadriven;
+package com.example.ooppractice.movie;
 
 public enum MovieType {
     AMOUNT_DISCOUNT,

@@ -1,5 +1,7 @@
 package com.example.ooppractice.movie;
 
+import com.example.ooppractice.openingmovie.Money;
+
 import java.time.LocalDateTime;
 
 public class Screening {
@@ -13,23 +15,46 @@ public class Screening {
         this.whenScreened = whenScreened;
     }
 
-    public LocalDateTime getStartTime() {
-        return whenScreened;
+    public Money calculateFee(int audienceCount) {
+        switch (movie.getMovieType()) {
+            case AMOUNT_DISCOUNT:
+                if(movie.isDiscountable(whenScreened,sequence)) {
+                    return movie.calculateAmountDiscountedFee().times(audienceCount);
+                }
+                break;
+            case PERCENT_DISCOUNT:
+                if(movie.isDiscountable(whenScreened,sequence)) {
+                    return movie.calculatePercentDiscountedFee().times(audienceCount);
+                }
+                break;
+            case NONE_DISCOUNT:
+                return movie.calculateNoneDiscountedFee().times(audienceCount);
+        }
+
+        return movie.calculateNoneDiscountedFee().times(audienceCount);
     }
 
-    public Money getMovieFee() {
-        return movie.getFee();
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
     }
 
     public LocalDateTime getWhenScreened() {
         return whenScreened;
     }
 
-    public Reservation reserve(Customer customer, int audienceCount) {
-        return new Reservation(customer,this,calculateFee(audienceCount),audienceCount);
-    }
-
-    private Money calculateFee(int audienceCount) {
-        return movie.calculateMovieFee(this).times(audienceCount);
+    public void setWhenScreened(LocalDateTime whenScreened) {
+        this.whenScreened = whenScreened;
     }
 }

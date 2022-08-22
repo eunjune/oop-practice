@@ -1,8 +1,7 @@
-package com.example.ooppractice.movie.discount;
+package com.example.ooppractice.openingmovie.discount;
 
-import com.example.ooppractice.movie.Money;
-import com.example.ooppractice.movie.Screening;
-import com.example.ooppractice.movie.discount.DiscountCondition;
+import com.example.ooppractice.openingmovie.Money;
+import com.example.ooppractice.openingmovie.Screening;
 
 import java.util.ArrayList;
 import java.util.Arrays;

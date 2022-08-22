@@ -1,4 +1,4 @@
-package com.example.ooppractice.movie;
+package com.example.ooppractice.openingmovie;
 
 import java.math.BigDecimal;
 

@@ -1,6 +1,6 @@
-package com.example.ooppractice.movie.discount;
+package com.example.ooppractice.openingmovie.discount;
 
-import com.example.ooppractice.movie.Screening;
+import com.example.ooppractice.openingmovie.Screening;
 
 public class SequenceCondition implements DiscountCondition{
 
