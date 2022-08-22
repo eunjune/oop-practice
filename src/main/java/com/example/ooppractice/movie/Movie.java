@@ -1,5 +1,7 @@
 package com.example.ooppractice.movie;
 
+import com.example.ooppractice.movie.Money;
+import com.example.ooppractice.movie.Screening;
 import com.example.ooppractice.movie.discount.DiscountPolicy;
 
 import java.time.Duration;
