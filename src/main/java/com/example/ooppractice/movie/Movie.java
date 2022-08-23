@@ -5,48 +5,21 @@ import com.example.ooppractice.openingmovie.discount.DiscountPolicy;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Movie {
+public abstract class Movie {
     private String title;
     private Duration runningTime;
     private Money fee;
     private List<DiscountCondition> discountConditions;
 
-    private MovieType movieType;
-    private Money discountAmount;
-    private double discountPercent;
-
-    public Movie(String title, Duration runningTime, Money fee, DiscountPolicy DiscountPolicy) {
+    public Movie(String title, Duration runningTime, Money fee, DiscountCondition... discountConditions) {
         this.title = title;
         this.runningTime = runningTime;
         this.fee = fee;
-    }
-
-    private Money calculateDiscountAmount() {
-        switch (movieType) {
-            case AMOUNT_DISCOUNT:
-                return calculateAmountDiscountedFee();
-            case PERCENT_DISCOUNT:
-                return calculatePercentDiscountedFee();
-            case NONE_DISCOUNT:
-                return calculateNoneDiscountedFee();
-        }
-
-        throw new IllegalStateException();
-    }
-
-    public Money calculateAmountDiscountedFee() {
-        return discountAmount;
-    }
-
-    public Money calculatePercentDiscountedFee() {
-        return fee.times(discountPercent);
-    }
-
-    public Money calculateNoneDiscountedFee() {
-        return Money.ZERO;
+        this.discountConditions = Arrays.asList(discountConditions);
     }
 
     public Money calculateMovieFee(Screening screening) {
@@ -57,7 +30,13 @@ public class Movie {
         return fee;
     }
 
+    public Money getFee() {
+        return fee;
+    }
+
     private boolean isDiscountable(Screening screening) {
         return discountConditions.stream().anyMatch(condition -> condition.isSatisfiedBy(screening));
     }
+
+    abstract protected Money calculateDiscountAmount();
 }
