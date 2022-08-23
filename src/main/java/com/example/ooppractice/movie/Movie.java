@@ -24,83 +24,41 @@ public class Movie {
         this.fee = fee;
     }
 
+    private Money calculateDiscountAmount() {
+        switch (movieType) {
+            case AMOUNT_DISCOUNT:
+                return calculateAmountDiscountedFee();
+            case PERCENT_DISCOUNT:
+                return calculatePercentDiscountedFee();
+            case NONE_DISCOUNT:
+                return calculateNoneDiscountedFee();
+        }
+
+        throw new IllegalStateException();
+    }
+
     public Money calculateAmountDiscountedFee() {
-        if(movieType != MovieType.AMOUNT_DISCOUNT) {
-            throw new IllegalArgumentException();
-        }
-
-        return fee.minus(discountAmount);
-    }
-
-    public Money calculatePercentDiscountedFee() {
-        if(movieType != MovieType.PERCENT_DISCOUNT) {
-            throw new IllegalArgumentException();
-        }
-
-        return fee.minus(fee.times(discountPercent));
-    }
-
-    public Money calculateNoneDiscountedFee() {
-        if(movieType != MovieType.NONE_DISCOUNT) {
-            throw new IllegalArgumentException();
-        }
-
-        return fee;
-    }
-
-    public boolean isDiscountable(LocalDateTime whenScreened, int sequence) {
-        for(DiscountCondition condition : discountConditions) {
-            if(condition.getType() == DiscountConditionType.PERIOD) {
-                if(condition.isDiscountable(whenScreened.getDayOfWeek(),whenScreened.toLocalTime())) {
-                    return true;
-                }
-            } else {
-                if (condition.isDiscountable(sequence)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public Money getFee() {
-        return fee;
-    }
-
-    public List<DiscountCondition> getDiscountConditions() {
-        return Collections.unmodifiableList(discountConditions);
-    }
-
-    public void setDiscountConditions(List<DiscountCondition> discountConditions) {
-        this.discountConditions = discountConditions;
-    }
-
-    public void setFee(Money fee) {
-        this.fee = fee;
-    }
-
-    public MovieType getMovieType() {
-        return movieType;
-    }
-
-    public void setMovieType(MovieType movieType) {
-        this.movieType = movieType;
-    }
-
-    public Money getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Money discountAmount) {
-        this.discountAmount = discountAmount;
+    public Money calculatePercentDiscountedFee() {
+        return fee.times(discountPercent);
     }
 
-    public double getDiscountPercent() {
-        return discountPercent;
+    public Money calculateNoneDiscountedFee() {
+        return Money.ZERO;
     }
 
-    public void setDiscountPercent(double discountPercent) {
-        this.discountPercent = discountPercent;
+    public Money calculateMovieFee(Screening screening) {
+        if(isDiscountable(screening)) {
+            return fee.minus(calculateDiscountAmount());
+        }
+
+        return fee;
+    }
+
+    public boolean isDiscountable(Screening screening) {
+        return discountConditions.stream()
+                .anyMatch(condition -> condition.isSatisfiedBy(screening));
     }
 }
